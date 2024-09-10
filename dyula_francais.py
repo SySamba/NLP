@@ -74,7 +74,7 @@ st.markdown("""
 st.markdown('<h1 class="title">Traduction Dyula - Français</h1>', unsafe_allow_html=True)
 
 # Champ de texte pour l'entrée utilisateur
-input_text = st.text_area("Entrez du texte en Dyula:", "", key="input_text", help="Saisissez ici le texte en Dyula que vous souhaitez traduire.", placeholder="Ecrivez ici...", 
+input_text = st.text_area("Entrez du texte en Dyula :", "", key="input_text", help="Saisissez ici le texte en Dyula que vous souhaitez traduire.", placeholder="Ecrivez ici...", 
     height=150)
 
 # Bouton pour lancer la traduction
