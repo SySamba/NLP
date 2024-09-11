@@ -4,7 +4,7 @@ import streamlit as st
 from transformers import pipeline
 
 # Charger le modèle depuis Hugging Face au lieu d'un fichier local
-pipe = pipeline("text2text-generation", model="Kimmy7/dyula-french-model")
+pipe = pipeline("text2text-generation", model="Kimmy7/dyula-french-model",use_auth_token=True)
 
 # Ajouter du CSS personnalisé
 st.markdown("""
