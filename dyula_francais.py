@@ -1,12 +1,10 @@
-import streamlit as st
-import pickle
 
 # Charger le modèle de traduction dyula-français à partir du fichier .pkl
-try:
-    with open('dyula_french_model.pkl', 'rb') as f:
-        pipe = pickle.load(f)
-except Exception as e:
-    st.error(f"Erreur lors du chargement du modèle : {e}")
+import streamlit as st
+from transformers import pipeline
+
+# Charger le modèle depuis Hugging Face au lieu d'un fichier local
+pipe = pipeline("text2text-generation", model="Kimmy7/dyula-french-model")
 
 # Ajouter du CSS personnalisé
 st.markdown("""
