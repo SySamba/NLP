@@ -3,7 +3,7 @@ from transformers import pipeline
 
 # Charger le pipeline pour la traduction dyula-français
 try:
-    pipe = pipeline("translation", model="Kimmy7/dyula-french-model")
+    pipe = pipeline("translation", model="Kimmy7/dyula-french-model", framework="pt")
 except Exception as e:
     st.error(f"Erreur lors du chargement du modèle : {e}")
 
