@@ -2,10 +2,7 @@ import streamlit as st
 from transformers import pipeline
 
 # Charger le pipeline pour la traduction dyula-français
-try:
-    pipe = pipeline("translation", model="Kimmy7/dyula-french-model", framework="pt")
-except Exception as e:
-    st.error(f"Erreur lors du chargement du modèle : {e}")
+pipe = pipeline("text2text-generation", model="Kimmy7/dyula-french-model")
 
 # Ajouter du CSS personnalisé
 st.markdown("""
@@ -25,9 +22,9 @@ st.markdown("""
             font-weight: bold;
             display: inline-block;
             padding: 10px;
-            border: 4px solid #008CBA;
-            border-radius: 8px;
-            background-color: #f9f9f9;
+            border: 4px solid #008CBA; /* Couleur de la bordure */
+            border-radius: 8px; /* Bordure arrondie */
+            background-color: #f9f9f9; /* Couleur de fond pour le titre */
         }
         .text-area {
             width: 80%;
@@ -38,7 +35,7 @@ st.markdown("""
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             font-size: 1.2em;
             resize: vertical;
-            margin-top: 40px;
+            margin-top: 40px; /* Augmenter l'espace au-dessus du champ de texte */
         }
         .button {
             background-color: #008CBA;
@@ -83,14 +80,11 @@ input_text = st.text_area("Entrez du texte en Dyula :", "", key="input_text", he
 # Bouton pour lancer la traduction
 if st.button("Traduire", key="translate_button", help="Cliquez ici pour traduire le texte"):
     if input_text:
-        try:
-            # Traduire le texte
-            translations = pipe(input_text)
-            # Afficher la traduction
-            st.write("**Traduction en Français :**")
-            st.write(f"<div style='font-size: 1.5em; color: #333;'>{translations[0]['translation_text']}</div>", unsafe_allow_html=True)
-        except Exception as e:
-            st.error(f"Erreur lors de la traduction : {e}")
+        # Traduire le texte
+        translations = pipe(input_text)
+        # Afficher la traduction
+        st.write("**Traduction en Français :**")
+        st.write(f"<div style='font-size: 1.5em; color: #333;'>{translations[0]['generated_text']}</div>", unsafe_allow_html=True)
     else:
         st.error("Veuillez entrer du texte en Dyula pour la traduction.")
 
