@@ -1,72 +1,81 @@
 import streamlit as st
-from transformers import pipeline
+import pickle
 
-# Charger le pipeline pour la traduction dyula-français
-pipe = pipeline("text2text-generation", model="Kimmy7/dyula-french-model")
+# Charger le modèle de traduction dyula-français à partir du fichier .pkl
+try:
+    with open('dyula_french_model.pkl', 'rb') as f:
+        pipe = pickle.load(f)
+except Exception as e:
+    st.error(f"Erreur lors du chargement du modèle : {e}")
 
 # Ajouter du CSS personnalisé
 st.markdown("""
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
         body {
-            background-color: #e8f4f8;
+            background-color: #f0f8ff;
             color: #333;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', sans-serif;
             text-align: center;
-            padding: 0;
             margin: 0;
+            padding: 0;
         }
+
         .title {
-            color: #008CBA;
-            font-size: 2.5em;
+            color: #4CAF50;
+            font-size: 3em;
             margin: 20px 0;
-            font-weight: bold;
-            display: inline-block;
-            padding: 10px;
-            border: 4px solid #008CBA; /* Couleur de la bordure */
-            border-radius: 8px; /* Bordure arrondie */
-            background-color: #f9f9f9; /* Couleur de fond pour le titre */
-        }
-        .text-area {
-            width: 80%;
-            margin: auto;
-            padding: 15px;
+            font-weight: 600;
+            background-color: #ffffff;
             border-radius: 10px;
-            border: 2px solid #008CBA;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            font-size: 1.2em;
-            resize: vertical;
-            margin-top: 40px; /* Augmenter l'espace au-dessus du champ de texte */
+            padding: 10px 20px;
+            display: inline-block;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
+
+        textarea {
+            width: 70% !important;
+            margin: 30px auto !important;
+            padding: 15px !important;
+            border-radius: 10px !important;
+            border: 2px solid #4CAF50 !important;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+            font-size: 1.1em !important;
+        }
+
         .button {
-            background-color: #008CBA;
+            background-color: #4CAF50;
             color: white;
-            padding: 12px 24px;
+            padding: 15px 30px;
             border: none;
             border-radius: 10px;
             cursor: pointer;
             font-size: 1.2em;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.3s, transform 0.2s;
             margin-top: 20px;
+            transition: background-color 0.3s, transform 0.2s;
         }
+
         .button:hover {
-            background-color: #005f6a;
+            background-color: #45a049;
             transform: scale(1.05);
         }
+
         .footer {
-            margin-top: 40px;
-            padding: 20px;
-            color: #555;
+            margin-top: 50px;
+            color: #777;
             font-size: 1em;
-            border-top: 1px solid #ccc;
         }
+
         .footer a {
-            color: #008CBA;
+            color: #4CAF50;
             text-decoration: none;
         }
+
         .footer a:hover {
             text-decoration: underline;
         }
+
     </style>
 """, unsafe_allow_html=True)
 
@@ -74,17 +83,22 @@ st.markdown("""
 st.markdown('<h1 class="title">Traduction Dyula - Français</h1>', unsafe_allow_html=True)
 
 # Champ de texte pour l'entrée utilisateur
-input_text = st.text_area("Entrez du texte en Dyula :", "", key="input_text", help="Saisissez ici le texte en Dyula que vous souhaitez traduire.", placeholder="Ecrivez ici...", 
+input_text = st.text_area("Entrez du texte en Dyula :", "", key="input_text", 
+    help="Saisissez ici le texte en Dyula que vous souhaitez traduire.", 
+    placeholder="Ecrivez ici...", 
     height=150)
 
 # Bouton pour lancer la traduction
-if st.button("Traduire", key="translate_button", help="Cliquez ici pour traduire le texte"):
+if st.button("Traduire", key="translate_button"):
     if input_text:
-        # Traduire le texte
-        translations = pipe(input_text)
-        # Afficher la traduction
-        st.write("**Traduction en Français :**")
-        st.write(f"<div style='font-size: 1.5em; color: #333;'>{translations[0]['generated_text']}</div>", unsafe_allow_html=True)
+        try:
+            # Traduire le texte en utilisant le modèle chargé depuis le fichier .pkl
+            translations = pipe(input_text)
+            # Afficher la traduction
+            st.write("**Traduction en Français :**")
+            st.write(f"<div style='font-size: 1.5em; color: #333;'>{translations[0]['generated_text']}</div>", unsafe_allow_html=True)
+        except Exception as e:
+            st.error(f"Erreur lors de la traduction : {e}")
     else:
         st.error("Veuillez entrer du texte en Dyula pour la traduction.")
 
